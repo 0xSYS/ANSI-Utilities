@@ -36,4 +36,8 @@ int main()
    printlnNoRst("The text on the rest of the lines is the same but not on the same line", darkRed);
 }
 ```
+
+preview (Example from basic.cpp):
+![Screenshot 2023-09-23 214753](https://github.com/PianoArts2007/ANSI-Console-color-names/assets/92180085/b300e600-dcf5-43cc-a2e2-aa5fa99ae6e8)
+
 ### Check out examples/basic.cpp for all available colors and combinations
