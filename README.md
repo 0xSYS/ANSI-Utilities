@@ -7,6 +7,8 @@ The library was based on the [ANSI Escape codes tables](https://gist.github.com/
 
 This is a wip project, it may have bugs and it wasn't acurately tested.
 
+# Important note!!! This library uses c++ 17
+
 ## Example
 
 ```c++
@@ -34,6 +36,11 @@ int main()
 
    //Print without reseting the text color but on different line
    printlnNoRst("The text on the rest of the lines is the same but not on the same line", darkRed);
+
+   //Overload the print functions with undefined numbers and types of parameters
+   std::string str = "This string comes from the str variable";
+   print("Standard Text", darkBlue, " New text", str);
+   //And the same things can be done for all print type functions
 }
 ```
 
