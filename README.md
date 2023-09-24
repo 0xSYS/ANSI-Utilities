@@ -25,7 +25,7 @@ int main()
    //Or use "\n" to do the same thing using print function
    print("This text goes to a new line\n");
 
-   //Print text with colors
+   //Print text with colors (order foreground - background)
    print("This text is blue", darkBlue);
 
    //Set the text color and bacground colors
@@ -41,6 +41,26 @@ int main()
    std::string str = "This string comes from the str variable";
    print("Standard Text", darkBlue, " New text", str);
    //And the same things can be done for all print type functions
+
+
+   //color names:
+   //For Both foreground and background
+   //black
+   //darkBlue
+   //darkGreen
+   //darkCyan
+   //darkRed
+   //darkMagenta
+   //darkYellow
+   //defaultFg
+   //gray
+   //brightBlue
+   //brightGreen
+   //brightCyan
+   //brightRed
+   //brightMagenta
+   //brightYellow
+   //white
 }
 ```
 
