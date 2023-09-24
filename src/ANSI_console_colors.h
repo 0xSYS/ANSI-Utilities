@@ -167,6 +167,34 @@ void println(const std::string& s, const int fgColor, const int bgColor)
     printColorRst();
 }
 
+template <typename... Ts>
+void println(const std::string& s, Ts... args)
+{
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+    std::cout << std::endl;
+}
+
+template <typename... Ts>
+void println(const std::string& s, const int fgColor, Ts... args)
+{
+    printColor(fgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+    std::cout << std::endl;
+    printColorRst();
+}
+
+template <typename... Ts>
+void println(const std::string& s, const int fgColor, const int bgColor, Ts... args)
+{
+    printColor(fgColor, bgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+    std::cout << std::endl;
+    printColorRst();
+}
+
 void print(const std::string& s = "")
 {
     std::cout << s;
@@ -186,6 +214,31 @@ void print(const std::string& s, const int fgColor, const int bgColor)
     printColorRst();
 }
 
+template <typename... Ts>
+void print(const std::string& s, Ts... args)
+{
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+}
+
+template <typename... Ts>
+void print(const std::string& s, const int fgColor, Ts... args)
+{
+    printColor(fgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+    printColorRst();
+}
+
+template <typename... Ts>
+void print(const std::string& s, const int fgColor, const int bgColor, Ts... args)
+{
+    printColor(fgColor, bgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+    printColorRst();
+}
+
 void printNoRst(const std::string& s, const int fgColor)
 {
     printColor(fgColor);
@@ -198,6 +251,22 @@ void printNoRst(const std::string& s, const int fgColor, const int bgColor)
     std::cout << s;
 }
 
+template <typename... Ts>
+void printNoRst(const std::string& s, const int fgColor, Ts... args)
+{
+    printColor(fgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+}
+
+template <typename... Ts>
+void printNoRst(const std::string& s, const int fgColor, const int bgColor, Ts... args)
+{
+    printColor(fgColor, bgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+}
+
 void printlnNoRst(const std::string& s, const int fgColor)
 {
     printColor(fgColor);
@@ -208,4 +277,22 @@ void printlnNoRst(const std::string& s, const int fgColor, const int bgColor)
 {
     printColor(fgColor, bgColor);
     std::cout << s << std::endl;
+}
+
+template <typename... Ts>
+void printlnNoRst(const std::string& s, const int fgColor, Ts... args)
+{
+    printColor(fgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+    std::cout << std::endl;
+}
+
+template <typename... Ts>
+void printlnNoRst(const std::string& s, const int fgColor, const int bgColor, Ts... args)
+{
+    printColor(fgColor, bgColor);
+    std::cout << s;
+    ((std::cout << args << ' '), ...);
+    std::cout << std::endl;
 }
