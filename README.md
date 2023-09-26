@@ -43,7 +43,7 @@ int main()
    //And the same things can be done for all print type functions
 
 
-   //color names:
+   //color names for Windows
    //For Both foreground and background
    //black
    //darkBlue
@@ -61,6 +61,22 @@ int main()
    //brightMagenta
    //brightYellow
    //white
+
+   //Linux
+   //black
+   //darkRed
+   //darkGreen
+   //arkYellow
+   //darkBlue
+   //darkMagenta
+   //darkCyan
+   //defaultFg
+   //gray
+   //brightRed
+   //brightGreen
+   //brightYellow
+   //darkPurple
+   //brightPink
 }
 ```
 
