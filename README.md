@@ -64,7 +64,12 @@ int main()
 }
 ```
 
-preview (Example from basic.cpp):
+from basic.cpp 
+## Windows
 ![Screenshot 2023-09-23 214753](https://github.com/PianoArts2007/ANSI-Console-color-names/assets/92180085/b300e600-dcf5-43cc-a2e2-aa5fa99ae6e8)
+
+## Linux (RPi 4)
+![2023-09-26_19-36](https://github.com/PianoArts2007/ANSI-Console-color-names/assets/92180085/843922bc-2841-4c5f-bc80-ee56a9c79459)
+
 
 ### Check out examples/basic.cpp for all available colors and combinations
