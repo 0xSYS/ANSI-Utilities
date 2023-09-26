@@ -40,23 +40,44 @@ SOFTWARE.
 
 
 
-//DO NOT CHANGE ANYTHING HERE!!!
-const int black         = 0;
-const int darkBlue      = 1;
-const int darkGreen     = 2;
-const int darkCyan      = 3;
-const int darkRed       = 4;
-const int darkMagenta   = 5;
-const int darkYellow    = 6;
-const int defaultFg     = 7;
-const int gray          = 8;
-const int brightBlue    = 9;
-const int brightGreen   = 10;
-const int brightCyan    = 11;
-const int brightRed     = 12;
-const int brightMagenta = 13;
-const int brightYellow  = 14;
-const int white         = 15;
+#if defined (_WIN32)
+    //DO NOT CHANGE ANYTHING HERE!!!
+    const int black         = 0;
+    const int darkBlue      = 1;
+    const int darkGreen     = 2;
+    const int darkCyan      = 3;
+    const int darkRed       = 4;
+    const int darkMagenta   = 5;
+    const int darkYellow    = 6;
+    const int defaultFg     = 7;
+    const int gray          = 8;
+    const int brightBlue    = 9;
+    const int brightGreen   = 10;
+    const int brightCyan    = 11;
+    const int brightRed     = 12;
+    const int brightMagenta = 13;
+    const int brightYellow  = 14;
+    const int white         = 15;
+#endif
+
+
+#if defined (__linux__)
+    //DO NOT CHANGE ANYTHING HERE!!!
+    const int black        = 0;
+    const int darkRed      = 1;
+    const int darkGreen    = 2;
+    const int darkYellow   = 3;
+    const int darkBlue     = 4;
+    const int darkMagenta  = 5;
+    const int darkCyan     = 6;
+    const int defaultFg    = 7;
+    const int gray         = 10;
+    const int brightRed    = 11;
+    const int brightGreen  = 12;
+    const int brightYellow = 13;
+    const int darkPurple   = 14;
+    const int brightPink   = 15;
+#endif
 
 
 
