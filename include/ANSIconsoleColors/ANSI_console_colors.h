@@ -1,36 +1,9 @@
-/*
-MIT License
-
-Copyright (c) 2023 Zidon224
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-
-
 #pragma once
 
 
-
-#include <iostream>
-#include <string>
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 #ifdef _WIN32
     #define WIN32_LEAN_AND_MEAN
     #define VC_EXTRALEAN
@@ -38,282 +11,214 @@ SOFTWARE.
 #endif
 
 
+//All of this shit is for windows's stupid API
+#ifdef _WIN32
+    #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+        #define ENABLE_VIRTUAL_TERMINAL_PROCESSING  0x0004
+    #endif
 
+    static HANDLE stdoutHandle, stdinHandle;
+    static DWORD outModeInit, inModeInit;
 
-#if defined (_WIN32)
-    //DO NOT CHANGE ANYTHING HERE!!!
-    const int black         = 0;
-    const int darkBlue      = 1;
-    const int darkGreen     = 2;
-    const int darkCyan      = 3;
-    const int darkRed       = 4;
-    const int darkMagenta   = 5;
-    const int darkYellow    = 6;
-    const int defaultFg     = 7;
-    const int gray          = 8;
-    const int brightBlue    = 9;
-    const int brightGreen   = 10;
-    const int brightCyan    = 11;
-    const int brightRed     = 12;
-    const int brightMagenta = 13;
-    const int brightYellow  = 14;
-    const int white         = 15;
+    static inline void SetTerminal()
+    {
+        DWORD outMode = 0, inMode = 0;
+        stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+        stdinHandle = GetStdHandle(STD_INPUT_HANDLE);
+
+        if(stdoutHandle == INVALID_HANDLE_VALUE || stdinHandle == INVALID_HANDLE_VALUE) 
+        {
+            exit(GetLastError());
+        }
+    
+        if(!GetConsoleMode(stdoutHandle, &outMode) || !GetConsoleMode(stdinHandle, &inMode)) 
+        {
+            exit(GetLastError());
+        }
+
+        outModeInit = outMode;
+        inModeInit = inMode;
+    
+        // Enable ANSI escape codes
+        outMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+        // Set stdin as no echo and unbuffered
+        inMode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
+
+        if(!SetConsoleMode(stdoutHandle, outMode) || !SetConsoleMode(stdinHandle, inMode)) 
+        {
+            exit(GetLastError());
+        }    
+    }
 #endif
 
-
-#if defined (__linux__)
-    //DO NOT CHANGE ANYTHING HERE!!!
-    const int black        = 0;
-    const int darkRed      = 1;
-    const int darkGreen    = 2;
-    const int darkYellow   = 3;
-    const int darkBlue     = 4;
-    const int darkMagenta  = 5;
-    const int darkCyan     = 6;
-    const int defaultFg    = 7;
-    const int gray         = 10;
-    const int brightRed    = 11;
-    const int brightGreen  = 12;
-    const int brightYellow = 13;
-    const int darkPurple   = 14;
-    const int brightPink   = 15;
-#endif
-
-
-
-std::string getTextColorCode(const int fgColor)
+//Standard ansi colors
+enum StandardColors
 {
-    switch (fgColor)
+    Reset,
+    FG_Black = 30,
+    FG_Red,
+    FG_Green,
+    FG_Yellow,
+    FG_Blue,
+    FG_Magenta,
+    FG_Cyan,
+    FG_White,
+    FG_Default = 39,
+    BG_Black = 40,
+    BG_Red,
+    BG_Green,
+    BG_Yellow,
+    BG_Blue,
+    BG_Magenta,
+    BG_Cyan,
+    BG_White,
+    BG_Default = 49,
+    FG_Bright_Black = 90,
+    FG_Bright_Red,
+    FG_Bright_Green,
+    FG_Bright_Yellow,
+    FG_Bright_Blue,
+    FG_Bright_Magenta,
+    FG_Bright_Cyan,
+    FG_Bright_White,
+    BG_Bright_Black = 100,
+    BG_Bright_Red,
+    BG_Bright_Green,
+    BG_Bright_Yellow,
+    BG_Bright_Blue,
+    BG_Bright_Magenta,
+    BG_Bright_Cyan,
+    BG_Bright_White,
+};
+
+//Text styles
+enum TextStyles
+{
+    Bold = 1,
+    Dimm,
+    Italic,
+    Underline,
+    Blink,
+    Reverse = 7,
+    Hidden,
+    Striketrough
+};
+
+//Reset text styles
+enum RstTextStyles
+{
+    RstBoldAndDimm = 22,
+    RstItalic,
+    RstUnderline,
+    RstBlinkMode,
+    RstReverse = 27,
+    RstHidden,
+    RstStrikeTrough
+};
+
+//Aditional flags for Xterm and true color RGB
+enum Xterm_RGB
+{
+    FG = 38,
+    BG = 48
+};
+
+
+//plain functions
+
+static inline void STDColorsFG(int codeNumFG)
+{
+    printf("\033[%dm", codeNumFG);
+}
+
+static inline void STDColorsFG_BG(int codeNumFG, int codeNumBG)
+{
+    printf("\033[%d;%dm", codeNumFG, codeNumBG);
+}
+
+static inline void XtermFG(int getFG1, int XtermID)
+{
+    printf("\033[%d;5;%dm", getFG1, XtermID);
+}
+
+static inline void XtermFG_BG(int getFG2, int XtermFGID, int getBG1, int XtermBGID)
+{
+    printf("\033[%d;5;%d;%d;5;%dm", getFG2, XtermFGID, getBG1, XtermBGID);
+}
+
+static inline void RGB_FG(int getFG3, int R, int G, int B)
+{
+    printf("\033[%d;2;%d;%d;%dm", getFG3, R, G, B);
+}
+
+static inline void RGB_FG_BG(int getFG4, int R, int G, int B, int getBG2, int bR, int bG, int bB)
+{
+    printf("\033[%d;2;%d;%d;%d;%d;2;%d;%d;%dm", getFG4, R, G, B, getBG2, bR, bG, bB);
+}
+
+static inline void CresetAll()
+{
+    //std::cout << "\033[0m";
+    printf("\033[0m");
+}
+
+//Function overloading
+
+#define COUNT_PARMS2(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _, ...) _
+#define COUNT_PARMS(...)COUNT_PARMS2(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+
+
+static inline void count_overload_aux(int count, ...)
+{
+    va_list v;
+    va_start(v, count);
+
+    switch(count)
     {
-        //DO NOT CHANGE ANYTHING HERE!!!
-        case  0: return "30";
-        case  1: return "31";
-        case  2: return "32";
-        case  3: return "33";
-        case  4: return "34";
-        case  5: return "35";
-        case  6: return "36";
-        case  7: return "37";
-        case  8: return "39";
-        case  9: return "0";
-        case 10: return "90";
-        case 11: return "91";
-        case 12: return "92";
-        case 13: return "93";
-        case 14: return "94";
-        case 15: return "95";
+        case 1:
+        {
+            int codeNumFG = va_arg(v, int);
+            STDColorsFG(codeNumFG);
+            break;
+        }
+
+        case 2:
+        {
+            int codeNumFG = va_arg(v, int);
+            int codeNumBG = va_arg(v, int);
+            STDColorsFG_BG(codeNumFG, codeNumBG);
+            break;
+        }
+
+        case 3:
+        {
+            int getFG1 = va_arg(v, int);
+            int XtermID = va_arg(v, int);
+            XtermFG(getFG1, XtermID);
+            break;
+        }
+
+        case 4:
+        {
+            int getFG2 = va_arg(v, int);
+            int XtermFGID = va_arg(v, int);
+            int getBG1 = va_arg(v, int);
+            int XtermBGID = va_arg(v, int);
+            XtermFG_BG(getFG2, XtermFGID, getBG1, XtermBGID);
+            break;
+        }
+
+        default:
+        {
+            va_end(v);
+
+            printf("Invalid arguments to function 'Ctext()'");
+            exit(1);
+        }
     }
+
+    va_end(v);
 }
 
-std::string getBgColorCode(const int bgColor)
-{
-    switch (bgColor)
-    {
-        //DO NOT CHANGE ANYTHING HERE!!!
-        case  0: return "40";
-        case  1: return "41";
-        case  2: return "42";
-        case  3: return "43";
-        case  4: return "44";
-        case  5: return "45";
-        case  6: return "46";
-        case  7: return "47";
-        case  8: return "49";
-        case  9: return "0";
-        case 10: return "100";
-        case 11: return "101";
-        case 12: return "102";
-        case 13: return "103";
-        case 14: return "104";
-        case 15: return "105";
-    }
-}
-
-std::string getPrintColor(const int fgColor)
-{
-    return "\x1b[" + getTextColorCode(fgColor) + "m";
-}
-
-std::string getPrintColor(const int fgColor, const int bgColor)
-{
-    return "\x1b[" + getTextColorCode(fgColor) + ";" + getBgColorCode(bgColor) + "m";
-}
-
-void printColor(const int fgColor)
-{
-    #if defined(_WIN32)
-        static const HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleTextAttribute(handle, fgColor);
-    #elif defined(__linux__)
-        std::cout << getPrintColor(fgColor);
-    #endif
-}
-
-void printColor(const int fgColor, const int bgColor)
-{
-    #if defined(_WIN32)
-        static const HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleTextAttribute(handle, bgColor << 4 | fgColor);
-    #elif defined(__linux__)
-        std::cout << getPrintColor(fgColor, bgColor);
-    #endif
-}
-
-void printColorRst()
-{
-    #if defined(_WIN32)
-        static const HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleTextAttribute(handle, 7);
-    #elif defined(__linux__)
-        std::cout << "\x1b[0m";
-    #endif
-}
-
-void println(const std::string& s = "")
-{
-    std::cout << s << std::endl;
-}
-
-void println(const std::string& s, const int fgColor)
-{
-    printColor(fgColor);
-    std::cout << s << std::endl;
-    printColorRst();
-}
-
-void println(const std::string& s, const int fgColor, const int bgColor)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s << std::endl;
-    printColorRst();
-}
-
-template <typename... Ts>
-void println(const std::string& s, Ts... args)
-{
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-    std::cout << std::endl;
-}
-
-template <typename... Ts>
-void println(const std::string& s, const int fgColor, Ts... args)
-{
-    printColor(fgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-    std::cout << std::endl;
-    printColorRst();
-}
-
-template <typename... Ts>
-void println(const std::string& s, const int fgColor, const int bgColor, Ts... args)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-    std::cout << std::endl;
-    printColorRst();
-}
-
-void print(const std::string& s = "")
-{
-    std::cout << s;
-}
-
-void print(const std::string& s, const int fgColor)
-{
-    printColor(fgColor);
-    std::cout << s;
-    printColorRst();
-}
-
-void print(const std::string& s, const int fgColor, const int bgColor)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s;
-    printColorRst();
-}
-
-template <typename... Ts>
-void print(const std::string& s, Ts... args)
-{
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-}
-
-template <typename... Ts>
-void print(const std::string& s, const int fgColor, Ts... args)
-{
-    printColor(fgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-    printColorRst();
-}
-
-template <typename... Ts>
-void print(const std::string& s, const int fgColor, const int bgColor, Ts... args)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-    printColorRst();
-}
-
-void printNoRst(const std::string& s, const int fgColor)
-{
-    printColor(fgColor);
-    std::cout << s;
-}
-
-void printNoRst(const std::string& s, const int fgColor, const int bgColor)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s;
-}
-
-template <typename... Ts>
-void printNoRst(const std::string& s, const int fgColor, Ts... args)
-{
-    printColor(fgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-}
-
-template <typename... Ts>
-void printNoRst(const std::string& s, const int fgColor, const int bgColor, Ts... args)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-}
-
-void printlnNoRst(const std::string& s, const int fgColor)
-{
-    printColor(fgColor);
-    std::cout << s << std::endl;
-}
-
-void printlnNoRst(const std::string& s, const int fgColor, const int bgColor)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s << std::endl;
-}
-
-template <typename... Ts>
-void printlnNoRst(const std::string& s, const int fgColor, Ts... args)
-{
-    printColor(fgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-    std::cout << std::endl;
-}
-
-template <typename... Ts>
-void printlnNoRst(const std::string& s, const int fgColor, const int bgColor, Ts... args)
-{
-    printColor(fgColor, bgColor);
-    std::cout << s;
-    ((std::cout << args << ' '), ...);
-    std::cout << std::endl;
-}
+#define Ctext(...)count_overload_aux(COUNT_PARMS(__VA_ARGS__), __VA_ARGS__)
