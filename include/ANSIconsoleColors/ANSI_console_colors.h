@@ -1,9 +1,9 @@
 #pragma once
 
 
-#include <stdlib.h>
+
 #include <stdio.h>
-#include <stdarg.h>
+#include <stdint.h> //For muchless memory usage
 #ifdef _WIN32
     #define WIN32_LEAN_AND_MEAN
     #define VC_EXTRALEAN
@@ -48,7 +48,8 @@
         if(!SetConsoleMode(stdoutHandle, outMode) || !SetConsoleMode(stdinHandle, inMode)) 
         {
             exit(GetLastError());
-        }    
+        }
+        SetConsoleOutputCP(CP_UTF8); //Enabling unicode charset on windows console
     }
 #endif
 
@@ -125,100 +126,55 @@ enum Xterm_RGB
 };
 
 
-//plain functions
 
-static inline void STDColorsFG(int codeNumFG)
+//Ansi Settings functions
+
+static inline void STDColorsFG(uint8_t codeNumFG)
 {
-    printf("\033[%dm", codeNumFG);
+    printf("\033[%dm", codeNumFG); 
 }
 
-static inline void STDColorsFG_BG(int codeNumFG, int codeNumBG)
+static inline void STDColorsFG_BG(uint8_t codeNumFG, uint8_t codeNumBG)
 {
     printf("\033[%d;%dm", codeNumFG, codeNumBG);
 }
 
-static inline void XtermFG(int getFG1, int XtermID)
+static inline void XtermFG(uint8_t getFG1, uint8_t XtermID)
 {
     printf("\033[%d;5;%dm", getFG1, XtermID);
 }
 
-static inline void XtermFG_BG(int getFG2, int XtermFGID, int getBG1, int XtermBGID)
+static inline void XtermFG_BG(uint8_t getFG2, uint8_t XtermFGID, uint8_t getBG1, uint8_t XtermBGID)
 {
-    printf("\033[%d;5;%d;%d;5;%dm", getFG2, XtermFGID, getBG1, XtermBGID);
+    printf("\033[%d;5;%d;%d;5;%dm", getFG2, XtermFGID, getBG1, XtermBGID); 
 }
 
-static inline void RGB_FG(int getFG3, int R, int G, int B)
+static inline void RGB_FG(uint8_t getFG3, uint8_t R, uint8_t G, uint8_t B)
 {
     printf("\033[%d;2;%d;%d;%dm", getFG3, R, G, B);
 }
 
-static inline void RGB_FG_BG(int getFG4, int R, int G, int B, int getBG2, int bR, int bG, int bB)
+static inline void RGB_FG_BG(uint8_t getFG4, uint8_t R, uint8_t G, uint8_t B, uint8_t getBG2, uint8_t bR, uint8_t bG, uint8_t bB)
 {
     printf("\033[%d;2;%d;%d;%d;%d;2;%d;%d;%dm", getFG4, R, G, B, getBG2, bR, bG, bB);
 }
 
+static inline void SetStyle1(uint8_t style)
+{
+    printf("\033[%dm", style);
+}
+
+static inline void SetStyle2(uint8_t style1, uint8_t style2)
+{
+    printf("\033[%d;%dm", style1, style2);
+}
+
+static inline void SetStyle3(uint8_t style1, uint8_t style2, uint8_t style3)
+{
+    printf("\033[%d;%d;%dm", style1, style2, style3);
+}
+
 static inline void CresetAll()
 {
-    //std::cout << "\033[0m";
     printf("\033[0m");
 }
-
-//Function overloading
-
-#define COUNT_PARMS2(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _, ...) _
-#define COUNT_PARMS(...)COUNT_PARMS2(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
-
-
-static inline void count_overload_aux(int count, ...)
-{
-    va_list v;
-    va_start(v, count);
-
-    switch(count)
-    {
-        case 1:
-        {
-            int codeNumFG = va_arg(v, int);
-            STDColorsFG(codeNumFG);
-            break;
-        }
-
-        case 2:
-        {
-            int codeNumFG = va_arg(v, int);
-            int codeNumBG = va_arg(v, int);
-            STDColorsFG_BG(codeNumFG, codeNumBG);
-            break;
-        }
-
-        case 3:
-        {
-            int getFG1 = va_arg(v, int);
-            int XtermID = va_arg(v, int);
-            XtermFG(getFG1, XtermID);
-            break;
-        }
-
-        case 4:
-        {
-            int getFG2 = va_arg(v, int);
-            int XtermFGID = va_arg(v, int);
-            int getBG1 = va_arg(v, int);
-            int XtermBGID = va_arg(v, int);
-            XtermFG_BG(getFG2, XtermFGID, getBG1, XtermBGID);
-            break;
-        }
-
-        default:
-        {
-            va_end(v);
-
-            printf("Invalid arguments to function 'Ctext()'");
-            exit(1);
-        }
-    }
-
-    va_end(v);
-}
-
-#define Ctext(...)count_overload_aux(COUNT_PARMS(__VA_ARGS__), __VA_ARGS__)
