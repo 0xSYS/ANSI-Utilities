@@ -1,103 +1,49 @@
-/*
-Here are all examples of printing texts in console with colors
-*/
-
-#include <iostream>
-#include "./include/ANSIconsoleColors/ANSI_console_colors.h"
-
-
-void ANSI_Examples_Demo()
-{
-    print("black | ", black);
-    print("darkBlue | ", darkBlue);
-    print("darkGreen | ", darkGreen);
-    print("darkCyan | ", darkCyan);
-    print("darkRed | ", darkRed);
-    print("darkMagenta | ", darkMagenta);
-    print("darkYellow | ", darkYellow);
-    print("defaultFg | ", defaultFg);
-    print("gray | ", gray);
-    print("brightBlue | ", brightBlue);
-    print("brightCyan | ", brightCyan);
-    print("brightRed | ", brightRed);
-    print("brightMagenta | ", brightMagenta);
-    print("brightYellow | ", brightYellow);
-    print("white | ", white);
-
-    print("Background colors\n");
-
-    print(" Text ", white, darkBlue);
-    print(" Text ", white, darkGreen);
-    print(" Text ", white, darkCyan);
-    print(" Text ", white, darkRed);
-    print(" Text ", white, darkMagenta);
-    print(" Text ", white, darkYellow);
-    print(" Text ", white, defaultFg);
-    print(" Text ", white, gray);
-    print(" Text ", white, brightBlue);
-    print(" Text ", white, brightCyan);
-    print(" Text ", white, brightRed);
-    print(" Text ", white, brightMagenta);
-    print(" Text \n", gray, brightYellow);
-    println("______________");
-
-    print("Print text on each line\n");
-
-    println("black", black);
-    println("darkBlue", darkBlue);
-    println("darkGreen", darkGreen);
-    println("darkCyan", darkCyan);
-    println("darkRed", darkRed);
-    println("darkMagenta", darkMagenta);
-    println("darkYellow", darkYellow);
-    println("defaultFg", defaultFg);
-    println("gray", gray);
-    println("brightBlue", brightBlue);
-    println("brightCyan", brightCyan);
-    println("brightRed", brightRed);
-    println("brightMagenta", brightMagenta);
-    println("brightYellow", brightYellow);
-    println("white", white);
-
-    println("With background colors");
-
-    println(" Text ", white, darkBlue);
-    println(" Text ", white, darkGreen);
-    println(" Text ", white, darkCyan);
-    println(" Text ", white, darkRed);
-    println(" Text ", white, darkMagenta);
-    println(" Text ", white, darkYellow);
-    println(" Text ", white, defaultFg);
-    println(" Text ", white, gray);
-    println(" Text ", white, brightBlue);
-    println(" Text ", white, brightCyan);
-    println(" Text ", white, brightRed);
-    println(" Text ", white, brightMagenta);
-    println(" Text ", gray, brightYellow);
-    println("________________");
-    println("No color reset");
-
-    printNoRst("Text", darkBlue);
-    printNoRst("Text", darkBlue);
-
-    printNoRst("Text", darkBlue, darkGreen);
-    printlnNoRst("Text", darkBlue, darkGreen);
-
-    println("______________");
-
-    println("Print on multiple lines");
-
-    printlnNoRst("Text", darkBlue);
-    printlnNoRst("Text", darkBlue);
-
-    printlnNoRst("Text", darkBlue, darkGreen);
-    printlnNoRst("Text", darkBlue, darkGreen);
-}
-
+#include "AnsiCodes/re-write6.h"
 
 
 int main()
 {
-    std::cout << "Ansi code Examples\n";
-    ANSI_Examples_Demo();
+    SetTerminal(); //Only for windows
+
+
+
+    printf("Unicode Test: ██████████████████░░░░░░░░░░░░░░░░░\n");
+
+   
+
+    STDColorsFG(FG_Cyan);
+        printf("Thing\n");
+    CresetAll();
+
+    STDColorsFG_BG(FG_Red, BG_Bright_Yellow);
+        printf("Thing\n");
+    CresetAll();
+
+    XtermFG(FG, 48);
+        printf("Xterm Thing\n");
+    CresetAll();
+
+    XtermFG_BG(FG, 48, BG, 128);
+        printf("Thing\n");
+    CresetAll();
+
+    RGB_FG(FG, 255, 100, 20);
+        printf("Thing\n");
+    CresetAll();
+
+    RGB_FG_BG(FG, 255, 100, 20, BG, 20, 100, 255);
+        printf("Thing\n");
+    CresetAll();
+
+    SetStyle1(Striketrough);
+        printf("Bold\n");
+    CresetAll();
+
+    SetStyle2(Blink, Reverse);
+        printf("Bold + Underline\n");
+    CresetAll();
+
+    SetStyle3(Blink, Italic, Underline);
+        printf("Blink + Italic + Underline\n");
+    CresetAll();
 }
