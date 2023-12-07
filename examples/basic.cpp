@@ -198,4 +198,28 @@ int main()
         printf("Bold\n");
     CresetAll();
 
+    SetStyle1(Italic);
+        printf("Italic\n");
+    CresetAll();
+
+    SetStyle1(Underline);
+        printf("Underline\n");
+    CresetAll();
+
+    SetStyle1(Striketrough);
+        printf("Striketrough\n");
+    CresetAll();
+
+    SetStyle1(Dimm);
+        printf("Dimm\n");
+    CresetAll();
+
+    SetStyle1(Blink);
+        printf("Blink\n");
+    CresetAll();
+
+    SetStyle1(Reverse);
+        printf("Reverse\n");
+    CresetAll();
+
 }
