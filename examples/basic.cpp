@@ -4,8 +4,6 @@
 
 int main()
 {
-    //Basic colors (These colors are supported by any terminal)
-
     SetTerminal(); //Disable this function if you use Linux
     
     printf("#### Standard colors ####\n\n");
@@ -219,7 +217,48 @@ int main()
     CresetAll();
 
     SetStyle1(Reverse);
-        printf("Reverse\n");
+        printf("Reverse\n\n");
     CresetAll();
 
+    printf("- 2 Styles combinations\n");
+
+    SetStyle2(Italic, Underline);
+        printf("Italic + Underline\n\n");
+    CresetAll();
+
+    printf("- 3 Styles combination\n");
+
+    SetStyle3(Dimm, Italic, Striketrough);
+        printf("Dimm + Italic + Striketrough\n\n");
+    CresetAll();
+
+    printf("- Styles and standard colors\n");
+
+    Style1FGColor(Italic, FG_Cyan);
+        printf("Italic + Cyan\n");
+    CresetAll();
+
+    Style1FGColor(Underline, FG_Magenta);
+        printf("Underline + Magenta\n");
+    CresetAll();
+
+    Style1FGColor(Dimm, FG_Bright_Yellow);
+        printf("Dimm + Bright Yellow\n");
+    CresetAll();
+
+    Style2FGColor(Underline, FG_Blue, BG_Green);
+        printf("Underline + Blue FG + Green BG\n");
+    CresetAll();
+
+    Style2FGColor(Dimm, Italic, FG_Red);
+        printf("Dimm + Italic + Red FG\n");
+    CresetAll();
+
+    Style2FG_BGColor(Dimm, Italic, FG_Green, BG_Bright_Blue);
+        printf("Dimm + Italic + FG Green + BG Bright Blue\n\n");
+    CresetAll();
+
+    printf("#### Unicode support (UTF 8) ####\n");
+
+    printf("50% ██████████████░░░░░░░░░\n");
 }
