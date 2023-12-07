@@ -189,7 +189,13 @@ int main()
     printf("- Background\n");
 
     RGB_FG(BG, 54, 80, 100);
-        printf("RGB (Custom color)\n");
+        printf("RGB (Custom color)\n\n");
+    CresetAll();
+
+    printf("#### Text Styles\n");
+
+    SetStyle1(Bold);
+        printf("Bold\n");
     CresetAll();
 
 }
