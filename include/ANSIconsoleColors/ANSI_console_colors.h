@@ -174,7 +174,28 @@ static inline void SetStyle3(uint8_t style1, uint8_t style2, uint8_t style3)
     printf("\033[%d;%d;%dm", style1, style2, style3);
 }
 
+static inline void ResetStyle(uint8_t rstCode)
+{
+    printf("\033[%dm", rstCode);
+}
+
+static inline void Style1FGColor(uint8_t style, uint8_t color)
+{
+    printf("\033[%d;%dm", style, color);
+}
+
+static inline void Style2FGColor(uint8_t value1, uint8_t value2, uint8_t value3)
+{
+    printf("\033[%d;%d;%dm", value1, value2, value3);
+}
+
+static inline void Style2FG_BGColor(uint8_t value1, uint8_t value2, uint8_t color1, uint8_t color2)
+{
+    printf("\033[%d;%d;%d;%dm", value1, value2, color1, color2);
+}
+
 static inline void CresetAll()
 {
     printf("\033[0m");
 }
+//There are so many posibilities...
