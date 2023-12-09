@@ -255,10 +255,38 @@ int main()
     CresetAll();
 
     Style2FG_BGColor(Dimm, Italic, FG_Green, BG_Bright_Blue);
-        printf("Dimm + Italic + FG Green + BG Bright Blue\n\n");
+        printf("Dimm + Italic + FG Green + BG Bright Blue\n");
     CresetAll();
 
+    Style3FGColor(Dimm, Italic, Reverse, FG_Bright_Red);
+        printf("Dimm + Italic + Reverse + Bright red\n");
+    CresetAll();
+
+    Style3FGColor(Underline, Striketrough, Blink, FG_Cyan);
+        printf("Underline + Striketrough + Blink + Cyan FG\n");
+    CresetAll();
+
+    Style3FG_BGColor(Dimm, Underline, Italic, FG_Blue, BG_Bright_Cyan);
+        printf("Dimm + Underline + Italic + FG Blue + BG Bright Cyan\n");
+    CresetAll();
+
+    Style1Xterm(Underline, FG, 48);
+        printf("Underline + Xterm ID: 48\n");
+    CresetAll();
+
+    Style2Xterm(Underline, Italic, FG, 128);
+        printf("Underline + Italic + Xterm ID: 128\n");
+    CresetAll();
+
+    Style3Xterm(Underline, Blink, Italic, FG, 166);
+        printf("Underline + Blink, Italic + Xterm ID: 166\n");
+    CresetAll();
+
+    Style1XtermFG_BG(Italic, FG, 34, BG, 166);
+        printf("Italic + Xterm FG ID: 34 + Xterm BG ID: 166\n\n");
+    CresetAll();
     printf("#### Unicode support (UTF 8) ####\n");
 
     printf("50% ██████████████░░░░░░░░░\n");
+
 }
