@@ -194,6 +194,36 @@ static inline void Style2FG_BGColor(uint8_t value1, uint8_t value2, uint8_t colo
     printf("\033[%d;%d;%d;%dm", value1, value2, color1, color2);
 }
 
+static inline void Style3FGColor(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t fgColor)
+{
+    printf("\033[%d;%d;%d;%dm", style1, style2, style3, fgColor);
+}
+
+static inline void Style3FG_BGColor(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t fgColor, uint8_t bgColor)
+{
+    printf("\033[%d;%d;%d;%d;%dm", style1, style2, style3, fgColor, bgColor);
+}
+
+static inline void Style1Xterm(uint8_t style, uint8_t getFG_BG, uint8_t XtermID)
+{
+    printf("\033[%d;%d;5;%dm", style, getFG_BG, XtermID);
+}
+
+static inline void Style2Xterm(uint8_t style1, uint8_t style2, uint8_t getFG, uint8_t XtermID)
+{
+    printf("\033[%d;%d;%d;5;%dm", style1, style2, getFG, XtermID);
+}
+
+static inline void Style3Xterm(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t getFG, uint8_t XtermID)
+{
+    printf("\033[%d;%d;%d;%d;5;%dm", style1, style2, style3, getFG, XtermID);
+}
+
+static inline void Style1XtermFG_BG(uint8_t style, uint8_t getFG, uint8_t XtermIDFG, uint8_t getBG, uint8_t XtermIDBG)
+{
+    printf("\033[%d;%d;5;%d;%d;5;%dm", style, getFG, XtermIDFG, getBG, XtermIDBG);
+}
+
 static inline void CresetAll()
 {
     printf("\033[0m");
