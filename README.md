@@ -1,91 +1,78 @@
-# ANSI-Console-color-names
+# ANSI-Utilities
 A C++ Library designed to handle ANSI escape codes easier.
-
-This is a re-write of the basic example found [here](https://stackoverflow.com/questions/4053837/colorizing-text-in-the-console-with-c)
 
 The library was based on the [ANSI Escape codes tables](https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797)
 
-This is a wip project, it may have bugs and it wasn't acurately tested.
-
-# Important note!!! This library uses c++ 17
 
 ## Example
 
 ```c++
-#include "ANSI_console_colors.h"
+#include "ANSI_Utils.h"
+
+
 
 int main()
 {
-   //Unstyled text
-   print("Standard text");
+    //Setting the terminal to virtual processed output (ONLY ON WINDOWS!!!)
+    //SetTerminal();
 
-   //print text to a new line
-   println("This text goes to a new line");
+    //Standard colors (Foreground, Background)
+    //Dark color
+    STDColorsFG(FG_Blue); //Set the foreground to blue
+        printf("Blue\n"); //Display function which can be printf or cout (If used in C++ code)
+    CresetAll();          //Reset all ansi escape codes
 
-   //Or use "\n" to do the same thing using print function
-   print("This text goes to a new line\n");
+    //Bright color
+    STDColorsFG(FG_Bright_Blue); //Set the text to bright blue
+        printf("Bright Blue\n"); //Display function
+    CresetAll();                 //Reset function
 
-   //Print text with colors (order foreground - background)
-   print("This text is blue", darkBlue);
+    //Both foreground and BG colors
+    STDColorsFG_BG(FG_Blue, BG_Bright_Green);
+        printf("Dark Blue FG + Bright Green BG\n\n");
+    CresetAll();
 
-   //Set the text color and bacground colors
-   print("Blue text with green bacground color", darkBlue, darkGreen);
+    //Xterm colors
+    XtermFG(FG, 166);
+        printf("Xterm ID: 166\n");
+    CresetAll();
 
-   //Print text with the same color (No color reset)
-   printNoRst("The text on the rest of the lines is the same", darkRed);
+    //Background
+    XtermFG(BG, 166);
+        printf("Xterm ID BG: 166\n");
+    CresetAll();
 
-   //Print without reseting the text color but on different line
-   printlnNoRst("The text on the rest of the lines is the same but not on the same line", darkRed);
+    //True color
+    RGB_FG(FG, 255, 80, 90);
+        printf("RGB (Custom color)\n\n");
+    CresetAll();
 
-   //Overload the print functions with undefined numbers and types of parameters
-   std::string str = "This string comes from the str variable";
-   print("Standard Text", darkBlue, " New text", str);
-   //And the same things can be done for all print type functions
+    //Background example
+    RGB_FG(BG, 54, 80, 100);
+        printf("RGB (Custom color)\n\n");
+    CresetAll();
 
+    //ANSI Styles
 
-   //color names for Windows
-   //For Both foreground and background
-   //black
-   //darkBlue
-   //darkGreen
-   //darkCyan
-   //darkRed
-   //darkMagenta
-   //darkYellow
-   //defaultFg
-   //gray
-   //brightBlue
-   //brightGreen
-   //brightCyan
-   //brightRed
-   //brightMagenta
-   //brightYellow
-   //white
+    SetStyle1(Bold);
+        printf("Bold\n");
+    CresetAll();
 
-   //Linux
-   //black
-   //darkRed
-   //darkGreen
-   //arkYellow
-   //darkBlue
-   //darkMagenta
-   //darkCyan
-   //defaultFg
-   //gray
-   //brightRed
-   //brightGreen
-   //brightYellow
-   //darkPurple
-   //brightPink
+    SetStyle1(Italic);
+        printf("Italic\n");
+    CresetAll();
+
+    //For more options and tests check out FullExample.c
 }
 ```
 
-from basic.cpp 
 ## Windows
 ![Screenshot 2023-09-23 214753](https://github.com/PianoArts2007/ANSI-Console-color-names/assets/92180085/b300e600-dcf5-43cc-a2e2-aa5fa99ae6e8)
 
 ## Linux (RPi 4)
-![2023-09-26_19-36](https://github.com/PianoArts2007/ANSI-Console-color-names/assets/92180085/843922bc-2841-4c5f-bc80-ee56a9c79459)
+![ansiTestLinux](https://github.com/Zidon224/ANSI-Console-color-names/assets/92180085/a24167df-aea3-4a20-aae8-75c91bb6b037)
 
 
-### Check out examples/basic.cpp for all available colors and combinations
+#Based on [sol-prog ansi escape codes](https://github.com/sol-prog/ansi-escape-codes-windows-posix-terminals-c-programming-examples)
+
+
