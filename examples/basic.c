@@ -53,5 +53,8 @@ int main()
         printf("Italic\n");
     CresetAll();
 
+    //Unicode chars
+    printf("50% ██████████████░░░░░░░░░\n\n");
+
     //For more options and tests check out FullExample.c
 }
