@@ -67,7 +67,8 @@ int main()
 ```
 
 ## Windows
-![Screenshot 2023-09-23 214753](https://github.com/PianoArts2007/ANSI-Console-color-names/assets/92180085/b300e600-dcf5-43cc-a2e2-aa5fa99ae6e8)
+![bandicam 2023-12-09 21-53-52-018](https://github.com/Zidon224/ANSI-Utilities/assets/92180085/f946fc05-93da-45bc-9b6b-6975bb5862ba)
+
 
 ## Linux (RPi 4)
 ![ansiTestLinux](https://github.com/Zidon224/ANSI-Console-color-names/assets/92180085/a24167df-aea3-4a20-aae8-75c91bb6b037)
