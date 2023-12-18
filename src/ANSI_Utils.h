@@ -51,6 +51,7 @@ SOFTWARE.
 
 #include <stdio.h>
 #include <stdint.h> //For muchless memory usage
+#include <stdlib.h> //for exit();
 #ifdef _WIN32
     #define WIN32_LEAN_AND_MEAN
     #define VC_EXTRALEAN
