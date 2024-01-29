@@ -91,7 +91,7 @@ SOFTWARE.
         outMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
         // Set stdin as no echo and unbuffered
-        inMode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
+        inMode = (ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
 
         if(!SetConsoleMode(stdoutHandle, outMode) || !SetConsoleMode(stdinHandle, inMode)) 
         {
