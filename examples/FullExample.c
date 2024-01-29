@@ -1,336 +1,312 @@
-#include "ANSI_Utils.h"
+/*
+MIT License
+
+Copyright (c) 2023 Zidon224
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+/*
+    -Changelogs-
+
+    [ 9.12.2023 ]
+    - Finished the new implementation
+    - No longer using custom print functions
+    - No more complicated code like in the previous version
+    - Small memory optimization
+
+    [ 29.01.2024 ]
+    - Line and multiline user input data is enabled
+
+    * Features: - Standard color support (Both Foreground and Background)
+                - Xterm color array (255 Colors Foreground and Background)
+                - Ansi Styles
+                - Many combinations (Color types FG, BG, Color types + Ansi styles)
+                - Unicode charset on Windows
+                - Multiline text input
+                
+    # tested on windows and Linux
+
+    Code references:
+    - New code was based on: https://github.com/sol-prog/ansi-escape-codes-windows-posix-terminals-c-programming-examples
+    Alternative link(From youtube): https://www.youtube.com/watch?v=bQ8qaBjJtYU&t=874s
+*/
 
 
 
-int main()
-{
-    SetTerminal(); //Disable this function if you use Linux
+#pragma once
+
+
+
+#include <stdio.h>
+#include <stdint.h> //For muchless memory usage
+#include <stdlib.h> //for exit();
+#ifdef _WIN32
+    #define WIN32_LEAN_AND_MEAN
+    #define VC_EXTRALEAN
+    #include <Windows.h>
+#endif
+
+
+//All of this shit is for windows's stupid API
+#ifdef _WIN32
+    #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+        #define ENABLE_VIRTUAL_TERMINAL_PROCESSING  0x0004
+    #endif
+
+    static HANDLE stdoutHandle, stdinHandle;
+    static DWORD outModeInit, inModeInit;
+
+    static inline void SetTerminal()
+    {
+        DWORD outMode = 0, inMode = 0;
+        stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+        stdinHandle = GetStdHandle(STD_INPUT_HANDLE);
+
+        if(stdoutHandle == INVALID_HANDLE_VALUE || stdinHandle == INVALID_HANDLE_VALUE) 
+        {
+            exit(GetLastError());
+        }
     
-    printf("#### Standard colors ####\n\n");
+        if(!GetConsoleMode(stdoutHandle, &outMode) || !GetConsoleMode(stdinHandle, &inMode)) 
+        {
+            exit(GetLastError());
+        }
 
-    printf("- Dark colors foreground \n");
+        outModeInit = outMode;
+        inModeInit = inMode;
+    
+        // Enable ANSI escape codes
+        outMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
-    STDColorsFG(FG_Red);
-        printf("Red\n");
-    CresetAll();
+        // Set stdin as no echo and unbuffered
+        inMode = (ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    STDColorsFG(FG_Green);
-        printf("Green\n");
-    CresetAll();
-
-    STDColorsFG(FG_Yellow);
-        printf("Yellow\n");
-    CresetAll();
-
-    STDColorsFG(FG_Blue);
-        printf("Blue\n");
-    CresetAll();
-
-    STDColorsFG(FG_Magenta);
-        printf("Magenta\n");
-    CresetAll();
-
-    STDColorsFG(FG_Cyan);
-        printf("Cyan\n");
-    CresetAll();
-
-    STDColorsFG(FG_White);
-        printf("White\n");
-    CresetAll();
-
-    STDColorsFG(FG_Default);
-        printf("Default\n\n");
-    CresetAll();
-
-    printf("- Dark colors Background\n");
-
-    STDColorsFG(BG_Red);
-        printf("Red\n");
-    CresetAll();
-
-    STDColorsFG(BG_Green);
-        printf("Green\n");
-    CresetAll();
-
-    STDColorsFG(BG_Yellow);
-        printf("Yellow\n");
-    CresetAll();
-
-    STDColorsFG(BG_Blue);
-        printf("Blue\n");
-    CresetAll();
-
-    STDColorsFG(BG_Magenta);
-        printf("Magenta\n");
-    CresetAll();
-
-    STDColorsFG(BG_Cyan);
-        printf("Cyan\n");
-    CresetAll();
-
-    STDColorsFG(BG_White);
-        printf("White\n");
-    CresetAll();
-
-    STDColorsFG(BG_Default);
-        printf("Default\n\n");
-    CresetAll();
-
-    printf("#### Bright Colors foreground\n");
-
-    STDColorsFG(FG_Bright_Red);
-        printf("Bright Red\n");
-    CresetAll();
-
-    STDColorsFG(FG_Bright_Green);
-        printf("Bright Green\n");
-    CresetAll();
-
-    STDColorsFG(FG_Bright_Yellow);
-        printf("Bright Yellow\n");
-    CresetAll();
-
-    STDColorsFG(FG_Bright_Blue);
-        printf("Bright Blue\n");
-    CresetAll();
-
-    STDColorsFG(FG_Bright_Magenta);
-        printf("Bright Magenta\n");
-    CresetAll();
-
-    STDColorsFG(FG_Bright_Cyan);
-        printf("Bright Cyan\n");
-    CresetAll();
-
-    STDColorsFG(FG_Bright_White);
-        printf("Bright White\n");
-    CresetAll();
-
-    STDColorsFG(FG_Bright_Black);
-        printf("Bright Black\n\n");
-    CresetAll();
-
-    printf("- Bright Colors background\n");
-
-    STDColorsFG(BG_Bright_Red);
-        printf("Bright Red\n");
-    CresetAll();
-
-    STDColorsFG(BG_Bright_Green);
-        printf("Bright Green\n");
-    CresetAll();
-
-    STDColorsFG(BG_Bright_Yellow);
-        printf("Bright Yellow\n");
-    CresetAll();
-
-    STDColorsFG(BG_Bright_Blue);
-        printf("Bright Blue\n");
-    CresetAll();
-
-    STDColorsFG(BG_Bright_Magenta);
-        printf("Bright Magenta\n");
-    CresetAll();
-
-    STDColorsFG(BG_Bright_Cyan);
-        printf("Bright Cyan\n");
-    CresetAll();
-
-    STDColorsFG(BG_Bright_White);
-        printf("Bright White\n");
-    CresetAll();
-
-    STDColorsFG(BG_Bright_Black);
-        printf("Bright Black\n\n");
-    CresetAll();
-
-    printf("#### Standard color combinations ####\n\n");
-
-    printf("- Dark colors + Bright Colors\n");
-
-    STDColorsFG_BG(FG_Blue, BG_Bright_Green);
-        printf("Dark Blue FG + Bright Green BG\n\n");
-    CresetAll();
-
-    printf("#### 256 Colors ####\n");
-
-    printf("- Foreground \n");
-
-    for(int i = 0; i < 256; i++)
-    {
-        XtermFG(FG, i);
-            printf("Xterm ID: %d\n", i);
-        CresetAll();
+        if(!SetConsoleMode(stdoutHandle, outMode) || !SetConsoleMode(stdinHandle, inMode)) 
+        {
+            exit(GetLastError());
+        }
+        SetConsoleOutputCP(CP_UTF8); //Enabling unicode charset on windows console
     }
+#endif
 
-    printf("\n\n");
+//Standard ansi colors
+enum StandardColors
+{
+    Reset,
+    FG_Black = 30,
+    FG_Red,
+    FG_Green,
+    FG_Yellow,
+    FG_Blue,
+    FG_Magenta,
+    FG_Cyan,
+    FG_White,
+    FG_Default = 39,
+    BG_Black = 40,
+    BG_Red,
+    BG_Green,
+    BG_Yellow,
+    BG_Blue,
+    BG_Magenta,
+    BG_Cyan,
+    BG_White,
+    BG_Default = 49,
+    FG_Bright_Black = 90,
+    FG_Bright_Red,
+    FG_Bright_Green,
+    FG_Bright_Yellow,
+    FG_Bright_Blue,
+    FG_Bright_Magenta,
+    FG_Bright_Cyan,
+    FG_Bright_White,
+    BG_Bright_Black = 100,
+    BG_Bright_Red,
+    BG_Bright_Green,
+    BG_Bright_Yellow,
+    BG_Bright_Blue,
+    BG_Bright_Magenta,
+    BG_Bright_Cyan,
+    BG_Bright_White,
+};
 
-    printf("- Background\n");
+//Text styles
+enum TextStyles
+{
+    Bold = 1,
+    Dimm,
+    Italic,
+    Underline,
+    Blink,
+    Reverse = 7,
+    Hidden,
+    Striketrough
+};
 
-    for(int i = 0; i < 256; i++)
-    {
-        XtermFG(BG, i);
-            printf("Xterm background ID: %d\n", i);
-        CresetAll();
-    }
+//Aditional flags for Xterm and true color RGB
+enum Xterm_RGB
+{
+    FG = 38,
+    BG = 48
+};
 
-    printf("\n\n");
 
-    printf("#### True color RGB ####\n\n");
 
-    printf("- Foreground\n");
+//Ansi Settings functions
+//there are many combintation posibilities implemented in the functions
+//The only thing needed is to make C function overloading possible
 
-    RGB_FG(FG, 255, 80, 90);
-        printf("RGB (Custom color)\n\n");
-    CresetAll();
+static inline void STDColorsFG(uint8_t codeNumFG)
+{
+    printf("\033[%dm", codeNumFG); 
+}
 
-    printf("- Background\n");
+static inline void STDColorsFG_BG(uint8_t codeNumFG, uint8_t codeNumBG)
+{
+    printf("\033[%d;%dm", codeNumFG, codeNumBG);
+}
 
-    RGB_FG(BG, 54, 80, 100);
-        printf("RGB (Custom color)\n\n");
-    CresetAll();
+static inline void XtermFG(uint8_t getFG1, uint8_t XtermID)
+{
+    printf("\033[%d;5;%dm", getFG1, XtermID);
+}
 
-    printf("#### Text Styles ####\n");
+static inline void XtermFG_BG(uint8_t getFG2, uint8_t XtermFGID, uint8_t getBG1, uint8_t XtermBGID)
+{
+    printf("\033[%d;5;%d;%d;5;%dm", getFG2, XtermFGID, getBG1, XtermBGID); 
+}
 
-    SetStyle1(Bold);
-        printf("Bold\n");
-    CresetAll();
+static inline void RGB_FG(uint8_t getFG3, uint8_t R, uint8_t G, uint8_t B)
+{
+    printf("\033[%d;2;%d;%d;%dm", getFG3, R, G, B);
+}
 
-    SetStyle1(Italic);
-        printf("Italic\n");
-    CresetAll();
+static inline void RGB_FG_BG(uint8_t getFG4, uint8_t R, uint8_t G, uint8_t B, uint8_t getBG2, uint8_t bR, uint8_t bG, uint8_t bB)
+{
+    printf("\033[%d;2;%d;%d;%d;%d;2;%d;%d;%dm", getFG4, R, G, B, getBG2, bR, bG, bB);
+}
 
-    SetStyle1(Underline);
-        printf("Underline\n");
-    CresetAll();
+static inline void SetStyle1(uint8_t style)
+{
+    printf("\033[%dm", style);
+}
 
-    SetStyle1(Striketrough);
-        printf("Striketrough\n");
-    CresetAll();
+static inline void SetStyle2(uint8_t style1, uint8_t style2)
+{
+    printf("\033[%d;%dm", style1, style2);
+}
 
-    SetStyle1(Dimm);
-        printf("Dimm\n");
-    CresetAll();
+static inline void SetStyle3(uint8_t style1, uint8_t style2, uint8_t style3)
+{
+    printf("\033[%d;%d;%dm", style1, style2, style3);
+}
 
-    SetStyle1(Blink);
-        printf("Blink\n");
-    CresetAll();
+static inline void ResetStyle(uint8_t rstCode)
+{
+    printf("\033[%dm", rstCode);
+}
 
-    SetStyle1(Reverse);
-        printf("Reverse\n\n");
-    CresetAll();
+static inline void Style1FGColor(uint8_t style, uint8_t color)
+{
+    printf("\033[%d;%dm", style, color);
+}
 
-    printf("- 2 Styles combinations\n");
+static inline void Style2FGColor(uint8_t value1, uint8_t value2, uint8_t value3)
+{
+    printf("\033[%d;%d;%dm", value1, value2, value3);
+}
 
-    SetStyle2(Italic, Underline);
-        printf("Italic + Underline\n\n");
-    CresetAll();
+static inline void Style2FG_BGColor(uint8_t value1, uint8_t value2, uint8_t color1, uint8_t color2)
+{
+    printf("\033[%d;%d;%d;%dm", value1, value2, color1, color2);
+}
 
-    printf("- 3 Styles combination\n");
+static inline void Style3FGColor(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t fgColor)
+{
+    printf("\033[%d;%d;%d;%dm", style1, style2, style3, fgColor);
+}
 
-    SetStyle3(Dimm, Italic, Striketrough);
-        printf("Dimm + Italic + Striketrough\n\n");
-    CresetAll();
+static inline void Style3FG_BGColor(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t fgColor, uint8_t bgColor)
+{
+    printf("\033[%d;%d;%d;%d;%dm", style1, style2, style3, fgColor, bgColor);
+}
 
-    printf("- Styles and color combinations\n");
+static inline void Style1Xterm(uint8_t style, uint8_t getFG_BG, uint8_t XtermID)
+{
+    printf("\033[%d;%d;5;%dm", style, getFG_BG, XtermID);
+}
 
-    Style1FGColor(Italic, FG_Cyan);
-        printf("Italic + Cyan\n");
-    CresetAll();
+static inline void Style2Xterm(uint8_t style1, uint8_t style2, uint8_t getFG, uint8_t XtermID)
+{
+    printf("\033[%d;%d;%d;5;%dm", style1, style2, getFG, XtermID);
+}
 
-    Style1FGColor(Underline, FG_Magenta);
-        printf("Underline + Magenta\n");
-    CresetAll();
+static inline void Style3Xterm(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t getFG, uint8_t XtermID)
+{
+    printf("\033[%d;%d;%d;%d;5;%dm", style1, style2, style3, getFG, XtermID);
+}
 
-    Style1FGColor(Dimm, FG_Bright_Yellow);
-        printf("Dimm + Bright Yellow\n");
-    CresetAll();
+static inline void Style1XtermFG_BG(uint8_t style, uint8_t getFG, uint8_t XtermIDFG, uint8_t getBG, uint8_t XtermIDBG)
+{
+    printf("\033[%d;%d;5;%d;%d;5;%dm", style, getFG, XtermIDFG, getBG, XtermIDBG);
+}
 
-    Style2FGColor(Underline, FG_Blue, BG_Green);
-        printf("Underline + Blue FG + Green BG\n");
-    CresetAll();
+static inline void Style2XtermFG_BG(uint8_t style1, uint8_t style2, uint8_t getFG, uint8_t XtermIDFG, uint8_t getBG, uint8_t XtermIDBG)
+{
+    printf("\033[%d;%d;%d;5;%d;%d;5;%dm", style1, style2, getFG, XtermIDFG, getBG, XtermIDBG);
+}
 
-    Style2FGColor(Dimm, Italic, FG_Red);
-        printf("Dimm + Italic + Red FG\n");
-    CresetAll();
+static inline void Style3XtermFG_BG(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t getFG, uint8_t XtermIDFG, uint8_t getBG, uint8_t XtermIDBG)
+{
+    printf("\033[%d;%d;%d;%d;5;%d;%d;5;%dm", style1, style2, style3, getFG, XtermIDFG, getBG, XtermIDBG);
+}
 
-    Style2FG_BGColor(Dimm, Italic, FG_Green, BG_Bright_Blue);
-        printf("Dimm + Italic + FG Green + BG Bright Blue\n");
-    CresetAll();
+static inline void Style1RGB(uint8_t style1, uint8_t getFG_BG, uint8_t R, uint8_t G, uint8_t B)
+{
+    printf("\033[%d;%d;2;%d;%d;%dm", style1, getFG_BG, R, G, B);
+}
 
-    Style3FGColor(Dimm, Italic, Reverse, FG_Bright_Red);
-        printf("Dimm + Italic + Reverse + Bright red\n");
-    CresetAll();
+static inline void Style2RGB(uint8_t style1, uint8_t style2, uint8_t getFG_BG, uint8_t R, uint8_t G, uint8_t B)
+{
+    printf("\033[%d;%d;%d;2;%d;%d;%dm", style1, style2, getFG_BG, R, G, B);
+}
 
-    Style3FGColor(Underline, Striketrough, Blink, FG_Cyan);
-        printf("Underline + Striketrough + Blink + Cyan FG\n");
-    CresetAll();
+static inline void Style3RGB(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t getFG_BG, uint8_t R, uint8_t G, uint8_t B)
+{
+    printf("\033[%d;%d;%d;%d;2;%d;%d;%dm", style1, style2, style3, getFG_BG, R, G, B);
+}
 
-    Style3FG_BGColor(Dimm, Underline, Italic, FG_Blue, BG_Bright_Cyan);
-        printf("Dimm + Underline + Italic + FG Blue + BG Bright Cyan\n");
-    CresetAll();
+static inline void Style1RGB_FG_BG(uint8_t style1, uint8_t getFG, uint8_t R, uint8_t G, uint8_t B, uint8_t getBG, uint8_t bR, uint8_t bG, uint8_t bB)
+{
+    printf("\033[%d;%d;2;%d;%d;%d;%d;2;%d;%d;%dm", style1, getFG, R, G, B, getBG, bR, bG, bB);
+}
 
-    Style1Xterm(Underline, FG, 48);
-        printf("Underline + Xterm ID: 48\n");
-    CresetAll();
+static inline void Style2RGB_FG_BG(uint8_t style1, uint8_t style2, uint8_t getFG, uint8_t R, uint8_t G, uint8_t B, uint8_t getBG, uint8_t bR, uint8_t bG, uint8_t bB)
+{
+    printf("\033[%d;%d;%d;2;%d;%d;%d;%d;2;%d;%d;%dm", style1, style2, getFG, R, G, B, getBG, bR, bG, bB);
+}
 
-    Style2Xterm(Underline, Italic, FG, 128);
-        printf("Underline + Italic + Xterm ID: 128\n");
-    CresetAll();
+static inline void Style3RGB_FG_BG(uint8_t style1, uint8_t style2, uint8_t style3, uint8_t getFG, uint8_t R, uint8_t G, uint8_t B, uint8_t getBG, uint8_t bR, uint8_t bG, uint8_t bB)
+{
+    printf("\033[%d;%d;%d;%d;2;%d;%d;%d;%d;2;%d;%d;%dm", style1, style2, style3, getFG, R, G, B, getBG, bR, bG, bB);
+}
 
-    Style3Xterm(Underline, Blink, Italic, FG, 166);
-        printf("Underline + Blink, Italic + Xterm ID: 166\n");
-    CresetAll();
-
-    Style1XtermFG_BG(Italic, FG, 34, BG, 166);
-        printf("Italic + Xterm FG ID: 34 + Xterm BG ID: 166\n");
-    CresetAll();
-
-    Style2XtermFG_BG(Italic, Underline, FG, 48, BG, 166);
-        printf("Italic + Underline + Xterm ID FG: 48 + XtermID BG: 166\n");
-    CresetAll();
-
-    Style3XtermFG_BG(Italic, Dimm, Underline, FG, 48, BG, 166);
-        printf("Italic + Dimm + Underline + Xterm ID FG: 48 + Xterm ID BG: 166\n");
-    CresetAll();
-
-    Style1RGB(Italic, FG, 255, 100, 50);
-        printf("Italic + RGB FG\n");
-    CresetAll();
-
-    Style1RGB(Italic, BG, 50, 100, 255);
-        printf("Italic + RGB BG\n");
-    CresetAll();
-
-    Style2RGB(Underline, Italic, FG, 20, 100, 100);
-        printf("Underline + Italic RGB FG\n");
-    CresetAll();
-
-    Style2RGB(Underline, Italic, BG, 250, 90, 70);
-        printf("Underline + Italic RGB BG\n");
-    CresetAll();
-
-    Style3RGB(Underline, Italic, Reverse, FG, 208, 80, 100);
-        printf("Underline + Italic + Reverse + RGB FG\n");
-    CresetAll();
-
-    Style3RGB(Underline, Italic, Reverse, BG, 50, 42, 255);
-        printf("Underline + Italic + RGB BG\n");
-    CresetAll();
-
-    Style1RGB_FG_BG(Italic, FG, 255, 100, 10, BG, 255, 10, 5);
-        printf("Italic + RGB FG + RGB BG\n");
-    CresetAll();
-
-    Style2RGB_FG_BG(Underline, Italic, FG, 255, 59, 100, BG, 10, 255, 5);
-        printf("Underline + Reverse + RGB FG + RGB BG\n");
-    CresetAll();
-
-    Style3RGB_FG_BG(Underline, Italic, Dimm, FG, 255, 80, 100, BG, 10, 200, 80);
-        printf("Underline + Italic + Dimm + RGB FG + RGB BG\n\n");
-    CresetAll();
-
-    printf("#### Unicode support (UTF 8) ####\n");
-
-    printf("50% ██████████████░░░░░░░░░\n\n");
+static inline void CresetAll()
+{
+    printf("\033[0m");
 }
