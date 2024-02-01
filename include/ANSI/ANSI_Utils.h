@@ -51,7 +51,7 @@ SOFTWARE.
 
 #include <stdio.h>
 #include <stdint.h> //For muchless memory usage
-#include <stdlib.h> // for exit();
+#include <stdlib.h> //for exit();
 #ifdef _WIN32
     #define WIN32_LEAN_AND_MEAN
     #define VC_EXTRALEAN
@@ -91,7 +91,7 @@ SOFTWARE.
         outMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
         // Set stdin as no echo and unbuffered
-        inMode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
+        inMode = (ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
         if(!SetConsoleMode(stdoutHandle, outMode) || !SetConsoleMode(stdinHandle, inMode)) 
         {
